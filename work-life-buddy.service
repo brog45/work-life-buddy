@@ -1,0 +1,32 @@
+# systemd user service for Work-Life Buddy
+#
+# Install:
+#   mkdir -p ~/.config/systemd/user
+#   cp work-life-buddy.service ~/.config/systemd/user/
+#   systemctl --user daemon-reload
+#   systemctl --user enable --now work-life-buddy
+#
+# Logs:
+#   journalctl --user -u work-life-buddy -f
+#
+# Disable temporarily (re-enables on next login):
+#   systemctl --user stop work-life-buddy
+#
+# Disable permanently:
+#   systemctl --user disable --now work-life-buddy
+
+[Unit]
+Description=Work-Life Buddy – enforces healthy work hours
+Documentation=https://github.com/yourname/work-life-buddy
+After=graphical-session.target
+PartOf=graphical-session.target
+
+[Service]
+Type=simple
+ExecStart=%h/.cargo/bin/work-life-buddy
+Restart=on-failure
+RestartSec=30
+Environment=RUST_LOG=info
+
+[Install]
+WantedBy=graphical-session.target
